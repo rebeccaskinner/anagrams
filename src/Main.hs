@@ -10,7 +10,7 @@ import System.IO.Unsafe
 
 type Anagramer = String -> String -> Bool
 
-primes :: [Int]
+primes :: [Integer]
 primes = sieve [2..]
   where
     sieve (p:xs) = p : sieve [x | x <- xs, x `mod` p > 0 ]
@@ -18,10 +18,10 @@ primes = sieve [2..]
 alphabetIndex :: Char -> Int
 alphabetIndex c = ord c - ord 'A'
 
-toPrime :: Char -> Int
+toPrime :: Char -> Integer
 toPrime = (primes !!) . alphabetIndex
 
-strProduct :: String -> Int
+strProduct :: String -> Integer
 strProduct = foldl (\prod thisLetter -> prod * toPrime thisLetter) 1
 
 anagramPrime :: Anagramer
@@ -29,11 +29,6 @@ anagramPrime a b = strProduct a == strProduct b
 
 anagramSort :: Anagramer
 anagramSort a b = (sort a) == (sort b)
-
-updateField v c = let idx = alphabetIndex c in do
-  old <- MV.read v idx
-  MV.write v idx (old + 1)
-  return v
 
 anagrams :: Anagramer -> [String] -> Bool
 anagrams _ [] = True
